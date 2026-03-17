@@ -5,8 +5,10 @@ import api from "../utils/api";
 function Skills() {
 
   const isAdmin = !!localStorage.getItem("token");
-
   const [skills, setSkills] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [editingSkill, setEditingSkill] = useState(null);
+  const [skillName, setSkillName] = useState("");
 
   const fetchSkills = async () => {
     const res = await api.get("/skills");
@@ -17,30 +19,31 @@ function Skills() {
     fetchSkills();
   }, []);
 
-  async function addSkill() {
-    const name = prompt("Enter skill name");
-    if (!name) return;
-
-    await api.post("/skills", { name });
-
-    fetchSkills();
+  function openAddModal() {
+    setEditingSkill(null);
+    setSkillName("");
+    setShowModal(true);
   }
 
-  async function editSkill(skill) {
+  function openEditModal(skill) {
+    setEditingSkill(skill);
+    setSkillName(skill.name || "");
+    setShowModal(true);
+  }
 
-    const name = prompt("Edit skill", skill.name);
-
-    if (!name) return;
-
-    await api.put(`/skills/${skill._id}`, { name });
-
+  async function handleSubmit() {
+    if (!skillName.trim()) return;
+    if (editingSkill) {
+      await api.put(`/skills/${editingSkill._id}`, { name: skillName });
+    } else {
+      await api.post("/skills", { name: skillName });
+    }
+    setShowModal(false);
     fetchSkills();
   }
 
   async function deleteSkill(id) {
-
     await api.delete(`/skills/${id}`);
-
     fetchSkills();
   }
 
@@ -63,6 +66,30 @@ function Skills() {
           Skills
         </motion.h2>
 
+        {/* MODAL */}
+        {showModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+            <div className="bg-[#1a1a2e] border border-purple-500/40 rounded-2xl p-8 w-full max-w-sm shadow-2xl shadow-purple-500/20">
+              <h3 className="text-xl font-bold text-purple-400 mb-6">{editingSkill ? "Edit Skill" : "Add Skill"}</h3>
+              <div>
+                <label className="text-sm text-gray-400 mb-1 block">Skill Name *</label>
+                <input
+                  className="w-full bg-white/5 border border-purple-500/30 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-purple-400"
+                  placeholder="e.g. Python"
+                  value={skillName}
+                  onChange={e => setSkillName(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && handleSubmit()}
+                  autoFocus
+                />
+              </div>
+              <div className="flex gap-3 mt-6">
+                <button onClick={handleSubmit} className="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg font-medium transition-colors">{editingSkill ? "Save Changes" : "Add Skill"}</button>
+                <button onClick={() => setShowModal(false)} className="flex-1 bg-white/5 hover:bg-white/10 text-gray-300 py-2 rounded-lg font-medium transition-colors">Cancel</button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* ADMIN ADD BUTTON */}
         {isAdmin && (
           <motion.div
@@ -72,7 +99,7 @@ function Skills() {
             transition={{ duration: 0.5 }}
           >
             <button
-              onClick={addSkill}
+              onClick={openAddModal}
               className="bg-green-600/80 px-4 py-2 rounded-lg text-white font-medium hover:bg-green-600 transition-colors"
             >
               Add Skill
@@ -98,7 +125,7 @@ function Skills() {
               {isAdmin && (
                 <div className="flex justify-center gap-2 mt-3">
                   <button
-                    onClick={() => editSkill(skill)}
+                    onClick={() => openEditModal(skill)}
                     className="bg-blue-500 px-2 py-1 rounded text-xs hover:bg-blue-600 transition-colors"
                   >
                     Edit

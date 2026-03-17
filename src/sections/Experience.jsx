@@ -2,9 +2,14 @@ import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import api from "../utils/api";
 
+const emptyExpForm = { org: "", timeline: "", desc: "" };
+
 function Experience() {
   const isAdmin = !!localStorage.getItem("token");
   const [experiences, setExperiences] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [editingExp, setEditingExp] = useState(null);
+  const [form, setForm] = useState(emptyExpForm);
 
   const fetchExperiences = async () => {
     const res = await api.get("/experiences");
@@ -15,40 +20,31 @@ function Experience() {
     fetchExperiences();
   }, []);
 
-  async function addExperience() {
-    const org = prompt("Enter Organization Name");
-    const timeline = prompt("Enter Timeline");
-    const desc = prompt("Enter Description");
+  function openAddModal() {
+    setEditingExp(null);
+    setForm(emptyExpForm);
+    setShowModal(true);
+  }
 
-    if (!org || !timeline || !desc) return;
+  function openEditModal(exp) {
+    setEditingExp(exp);
+    setForm({ org: exp.org || "", timeline: exp.timeline || "", desc: exp.desc || "" });
+    setShowModal(true);
+  }
 
-    await api.post("/experiences", {
-      org,
-      timeline,
-      desc
-    });
-
+  async function handleSubmit() {
+    if (!form.org || !form.timeline || !form.desc) return;
+    if (editingExp) {
+      await api.put(`/experiences/${editingExp._id}`, form);
+    } else {
+      await api.post("/experiences", form);
+    }
+    setShowModal(false);
     fetchExperiences();
   }
 
   async function deleteExperience(id) {
     await api.delete(`/experiences/${id}`);
-    fetchExperiences();
-  }
-
-  async function editExperience(exp) {
-    const org = prompt("Edit Organization", exp.org);
-    const timeline = prompt("Edit Timeline", exp.timeline);
-    const desc = prompt("Edit Description", exp.desc);
-
-    if (!org || !timeline || !desc) return;
-
-    await api.put(`/experiences/${exp._id}`, {
-      org,
-      timeline,
-      desc
-    });
-
     fetchExperiences();
   }
 
@@ -71,6 +67,33 @@ function Experience() {
           Experience
         </motion.h2>
 
+        {/* MODAL */}
+        {showModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+            <div className="bg-[#1a1a2e] border border-purple-500/40 rounded-2xl p-8 w-full max-w-md shadow-2xl shadow-purple-500/20">
+              <h3 className="text-xl font-bold text-purple-400 mb-6">{editingExp ? "Edit Experience" : "Add Experience"}</h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm text-gray-400 mb-1 block">Organization *</label>
+                  <input className="w-full bg-white/5 border border-purple-500/30 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-purple-400" placeholder="e.g. Google" value={form.org} onChange={e => setForm({ ...form, org: e.target.value })} />
+                </div>
+                <div>
+                  <label className="text-sm text-gray-400 mb-1 block">Timeline *</label>
+                  <input className="w-full bg-white/5 border border-purple-500/30 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-purple-400" placeholder="e.g. June 2024 - Present" value={form.timeline} onChange={e => setForm({ ...form, timeline: e.target.value })} />
+                </div>
+                <div>
+                  <label className="text-sm text-gray-400 mb-1 block">Description *</label>
+                  <textarea rows={3} className="w-full bg-white/5 border border-purple-500/30 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-purple-400 resize-none" placeholder="What did you do?" value={form.desc} onChange={e => setForm({ ...form, desc: e.target.value })} />
+                </div>
+              </div>
+              <div className="flex gap-3 mt-6">
+                <button onClick={handleSubmit} className="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg font-medium transition-colors">{editingExp ? "Save Changes" : "Add Experience"}</button>
+                <button onClick={() => setShowModal(false)} className="flex-1 bg-white/5 hover:bg-white/10 text-gray-300 py-2 rounded-lg font-medium transition-colors">Cancel</button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* ADMIN BUTTONS */}
         {isAdmin && (
           <motion.div
@@ -80,7 +103,7 @@ function Experience() {
             transition={{ duration: 0.5 }}
           >
             <button
-              onClick={addExperience}
+              onClick={openAddModal}
               className="px-4 py-2 bg-green-600/80 text-white rounded-lg hover:bg-green-600 transition-colors text-sm font-medium"
             >
               Add Experience
@@ -126,7 +149,7 @@ function Experience() {
               {isAdmin && (
                 <div className="flex gap-3 mt-4">
                   <button
-                    onClick={() => editExperience(exp)}
+                    onClick={() => openEditModal(exp)}
                     className="bg-blue-500 px-3 py-1 rounded-md text-sm hover:bg-blue-600 transition-colors"
                   >
                     Edit

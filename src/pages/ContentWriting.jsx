@@ -8,6 +8,10 @@ function ContentWriting() {
 
   const fileInputRef = useRef(null);
   const [pdfs, setPdfs] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [pendingFile, setPendingFile] = useState(null);
+  const [pdfTitle, setPdfTitle] = useState("");
+  const [uploading, setUploading] = useState(false);
   
   // JWT-based admin check
   const isAdmin = !!localStorage.getItem("token");
@@ -21,47 +25,40 @@ function ContentWriting() {
     fetchPdfs();
   }, []);
 
-  async function addPdf(event) {
+  function handleFileSelect(event) {
     const file = event.target.files[0];
     if (!file) return;
-
-    // Check if file is PDF
     if (file.type !== 'application/pdf') {
       alert('Please select a PDF file');
       return;
     }
+    setPendingFile(file);
+    setPdfTitle("");
+    setShowModal(true);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  }
 
-    const title = prompt("Enter PDF Title:");
-    if (!title) return;
-
-    // Create FormData for file upload
+  async function handleUploadSubmit() {
+    if (!pendingFile || !pdfTitle.trim()) return;
+    setUploading(true);
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('title', title);
-
+    formData.append('file', pendingFile);
+    formData.append('title', pdfTitle.trim());
     try {
-      await api.post("/pdfs", formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      
+      await api.post("/pdfs", formData, { headers: { 'Content-Type': 'multipart/form-data' } });
       fetchPdfs();
-      alert('PDF uploaded successfully!');
+      setShowModal(false);
+      setPendingFile(null);
+      setPdfTitle("");
     } catch (error) {
       console.error('Upload failed:', error);
       alert('Failed to upload PDF');
     }
-
-    // Reset file input
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
+    setUploading(false);
   }
 
   async function deletePdf(id) {
     if (!confirm('Are you sure you want to delete this PDF?')) return;
-
     await api.delete(`/pdfs/${id}`);
     fetchPdfs();
   }
@@ -137,6 +134,47 @@ function ContentWriting() {
   return (
     <>
       <NebulaBackground />
+
+      {/* UPLOAD MODAL */}
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="bg-[#1a1a2e] border border-purple-500/40 rounded-2xl p-8 w-full max-w-md shadow-2xl shadow-purple-500/20">
+            <h3 className="text-xl font-bold text-purple-400 mb-6">Upload PDF</h3>
+            <div className="space-y-4">
+              <div className="bg-white/5 border border-purple-500/20 rounded-lg px-4 py-3 text-sm text-gray-300">
+                {pendingFile?.name}
+              </div>
+              <div>
+                <label className="text-sm text-gray-400 mb-1 block">PDF Title *</label>
+                <input
+                  className="w-full bg-white/5 border border-purple-500/30 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-purple-400"
+                  placeholder="e.g. FinTech Market Analysis Report"
+                  value={pdfTitle}
+                  onChange={e => setPdfTitle(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && handleUploadSubmit()}
+                  autoFocus
+                />
+              </div>
+            </div>
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={handleUploadSubmit}
+                disabled={uploading}
+                className="flex-1 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white py-2 rounded-lg font-medium transition-colors"
+              >
+                {uploading ? "Uploading..." : "Upload"}
+              </button>
+              <button
+                onClick={() => { setShowModal(false); setPendingFile(null); }}
+                className="flex-1 bg-white/5 hover:bg-white/10 text-gray-300 py-2 rounded-lg font-medium transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="min-h-screen px-6 py-20 text-white relative z-10">
 
         <div className="max-w-7xl mx-auto">
@@ -153,7 +191,7 @@ function ContentWriting() {
                 ref={fileInputRef}
                 type="file"
                 accept=".pdf"
-                onChange={addPdf}
+                onChange={handleFileSelect}
                 style={{ display: 'none' }}
               />
               <button
