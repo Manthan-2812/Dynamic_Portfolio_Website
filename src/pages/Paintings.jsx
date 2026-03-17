@@ -133,7 +133,7 @@ function Paintings() {
                 <img
                   src={img.url}
                   alt="painting"
-                  className="rounded-xl hover:scale-105 transition w-full h-64 object-cover"
+                  className="rounded-xl hover:scale-105 transition w-full"
                 />
                 {isAdmin && (
                   <button
