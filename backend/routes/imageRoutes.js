@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const Image = require("../models/Image");
+const uploadImage = require("../middleware/uploadImage");
 
 /* GET images */
 router.get("/", async (req, res) => {
@@ -13,10 +14,12 @@ router.get("/", async (req, res) => {
   }
 });
 
-/* CREATE image */
-router.post("/", async (req, res) => {
+/* CREATE image (file upload) */
+router.post("/", uploadImage.single("file"), async (req, res) => {
   try {
-    const image = new Image(req.body);
+    const url = req.file ? req.file.path : req.body.url;
+    const { category } = req.body;
+    const image = new Image({ url, category });
     const saved = await image.save();
     res.json(saved);
   } catch (error) {
