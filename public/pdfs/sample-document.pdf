@@ -1,0 +1,9 @@
+This is a placeholder file to test PDF functionality.
+
+For a proper PDF preview, you need:
+1. A real PDF file placed in public/pdfs/
+2. Valid PDF format that react-pdf can parse
+
+The test-sample.pdf I created was too minimal and may not be a valid PDF format.
+
+Please place an actual PDF file in this folder to test the preview functionality.
