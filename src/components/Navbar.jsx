@@ -53,14 +53,14 @@ function Navbar() {
               onClick={logout}
               className="bg-red-500 px-4 py-2 rounded-lg hover:bg-red-600 transition-colors text-sm"
             >
-              Logout
+              Admin Logout
             </button>
           ) : (
             <button 
               onClick={() => navigate("/login")}
               className="bg-purple-500 px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors text-sm"
             >
-              Login
+              AdminLogin
             </button>
           )}
 
