@@ -19,7 +19,18 @@ mongoose.connect(process.env.MONGODB_URI)
   .catch((err) => console.error("MongoDB connection error:", err));
 
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000', 'https://manthanparekh28.github.io'],
+  origin: function(origin, callback) {
+    const allowed = [
+      'http://localhost:5173',
+      'http://localhost:3000',
+      'https://manthanparekh28.github.io'
+    ];
+    if (!origin || allowed.includes(origin) || origin.endsWith('.netlify.app')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 app.use(express.json());
