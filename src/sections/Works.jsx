@@ -20,6 +20,11 @@ function Works() {
       title: "Photography",
       description: "Captured moments and perspectives through photography.",
       route: "/photography"
+    },
+    {
+      title: "Certifications",
+      description: "Courses and certifications earned across technology, finance, and data science.",
+      route: "/certifications"
     }
   ];
 

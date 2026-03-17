@@ -10,6 +10,7 @@ const pdfRoutes = require("./routes/pdfRoutes");
 const imageRoutes = require("./routes/imageRoutes");
 const testRoutes = require("./routes/testRoutes");
 const authRoutes = require("./routes/authRoutes");
+const certificateRoutes = require("./routes/certificateRoutes");
 
 const app = express();
 
@@ -42,6 +43,7 @@ app.use("/api/pdfs", pdfRoutes);
 app.use("/api/images", imageRoutes);
 app.use("/api/test", testRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/certificates", certificateRoutes);
 
 app.get("/", (req, res) => {
   res.send("Portfolio API running");

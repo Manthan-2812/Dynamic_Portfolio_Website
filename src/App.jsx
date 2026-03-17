@@ -14,6 +14,7 @@ import ContentWriting from "./pages/ContentWriting";
 import Paintings from "./pages/Paintings";
 import Photography from "./pages/Photography";
 import AdminLogin from "./pages/AdminLogin";
+import Certifications from "./pages/Certifications";
 
 function Home() {
   return (
@@ -39,6 +40,7 @@ function App() {
         <Route path="/paintings" element={<Paintings />} />
         <Route path="/photography" element={<Photography />} />
         <Route path="/login" element={<AdminLogin />} />
+        <Route path="/certifications" element={<Certifications />} />
       </Routes>
     </Router>
   );
