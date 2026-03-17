@@ -103,10 +103,8 @@ function Experience() {
 
               <div className="flex items-center gap-4 mb-4">
 
-                {/* LOGO PLACEHOLDER */}
-
-                <div className="w-12 h-12 bg-purple-500/30 rounded-full flex items-center justify-center">
-                  Logo
+                <div className="w-12 h-12 bg-purple-500/30 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span className="text-purple-300 font-bold text-lg">{exp.org.charAt(0)}</span>
                 </div>
 
                 <div>

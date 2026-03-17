@@ -182,7 +182,7 @@ function ContentWriting() {
                     <span className="text-purple-300 font-bold text-xl">MP</span>
                   </div>
                   
-                  <h3 className="text-base font-semibold text-purple-300 mb-2 text-center">
+                  <h3 className="text-base font-semibold text-white mb-2 text-center drop-shadow-md">
                     {pdf.title}
                   </h3>
                 </div>

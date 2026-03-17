@@ -50,15 +50,15 @@ function About() {
           </div>
 
           <div className="mt-8 text-[17px] md:text-lg max-w-xl space-y-4">
-            <p className="leading-relaxed bg-gradient-to-r from-purple-200 via-pink-200 to-blue-200 bg-clip-text text-transparent font-medium">
-              I am passionate about exploring the intersection of <span className="font-semibold text-purple-300 drop-shadow-lg">technology and finance</span>,
-              particularly <span className="font-semibold text-purple-300 drop-shadow-lg">FinTech and data-driven financial solutions</span>.
-              My goal is to build a career in <span className="font-semibold text-purple-300 drop-shadow-lg">FinTech and Data Science</span>,
+            <p className="leading-relaxed text-gray-200 font-light tracking-wide italic border-l-2 border-purple-400 pl-4">
+              I am passionate about exploring the intersection of <span className="font-semibold text-purple-300 not-italic">technology and finance</span>,
+              particularly <span className="font-semibold text-purple-300 not-italic">FinTech and data-driven financial solutions</span>.
+              My goal is to build a career in <span className="font-semibold text-purple-300 not-italic">FinTech and Data Science</span>,
               leveraging AI to develop intelligent financial systems and tools.
             </p>
             
-            <p className="leading-relaxed bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 bg-clip-text text-transparent font-medium">
-              Beyond technology, I enjoy <span className="font-semibold text-purple-300 drop-shadow-lg">painting and sketching</span>, which helps me build
+            <p className="leading-relaxed text-gray-200 font-light tracking-wide italic border-l-2 border-purple-400 pl-4">
+              Beyond technology, I enjoy <span className="font-semibold text-purple-300 not-italic">painting and sketching</span>, which helps me build
               focus, creativity, and discipline. I also write analytical reports and content
               based on ideas and experiences I explore.
             </p>
