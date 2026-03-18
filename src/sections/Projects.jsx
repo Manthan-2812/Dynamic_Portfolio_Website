@@ -146,7 +146,7 @@ function Projects() {
                     </h3>
 
                     {project.collaborators && (
-                      <p className="text-sm text-gray-400 mb-2">
+                      <p className="text-sm text-gray-300 font-semibold mb-2">
                         Collaborators: {project.collaborators}
                       </p>
                     )}
