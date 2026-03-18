@@ -105,7 +105,9 @@ function Contact() {
               Looking forward to hearing from you! 🚀
             </p>
             <a
-              href="mailto:manthanparekh9d@gmail.com"
+              href="https://mail.google.com/mail/?view=cm&to=manthanparekh9d@gmail.com"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-purple-600/80 hover:bg-purple-600 px-6 py-3 rounded-lg font-medium transition-colors"
             >
               <Mail className="w-4 h-4" />
