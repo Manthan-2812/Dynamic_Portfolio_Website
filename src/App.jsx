@@ -15,6 +15,7 @@ import Paintings from "./pages/Paintings";
 import Photography from "./pages/Photography";
 import AdminLogin from "./pages/AdminLogin";
 import Certifications from "./pages/Certifications";
+import SplashNotice from "./components/SplashNotice";
 
 function Home() {
   return (
@@ -34,6 +35,7 @@ function Home() {
 function App() {
   return (
     <Router>
+      <SplashNotice />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/writing" element={<ContentWriting />} />
