@@ -34,7 +34,7 @@ function SplashNotice() {
         <p className="text-gray-300 text-center leading-relaxed text-sm">
           This website uses <span className="text-purple-300 font-semibold">Render's free backend</span>, which spins down after inactivity.
           On your <span className="text-white font-semibold">first visit</span>, it may take{" "}
-          <span className="text-purple-300 font-semibold">30 – 50 seconds</span> to load data like projects, PDFs, and images.
+          <span className="text-purple-300 font-semibold">50 seconds or more</span> to load data like projects, PDFs, and images.
           <br /><br />
           Please wait a moment and then start exploring. Thanks for your patience! 🙏
         </p>

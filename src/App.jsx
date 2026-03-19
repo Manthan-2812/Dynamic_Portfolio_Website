@@ -1,4 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+import api from "./utils/api";
 
 import Navbar from "./components/Navbar";
 import Background from "./components/Background";
@@ -33,6 +35,13 @@ function Home() {
 }
 
 function App() {
+  useEffect(() => {
+    const ping = () => api.get("/test").catch(() => {});
+    ping();
+    const interval = setInterval(ping, 14 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <Router>
       <SplashNotice />
