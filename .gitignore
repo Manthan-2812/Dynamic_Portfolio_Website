@@ -37,3 +37,6 @@ backend/fix-cloudinary-env.js
 # Test PDF files
 backend/test-pdf.pdf
 backend/*.pdf
+
+# Local reference files (not for repo)
+PROJECT_QA.md
