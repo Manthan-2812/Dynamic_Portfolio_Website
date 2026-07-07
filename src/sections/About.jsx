@@ -19,7 +19,7 @@ function About() {
 
   async function handleDownload() {
     if (resumeUrl) {
-      const downloadUrl = resumeUrl.replace("/upload/", "/upload/fl_attachment:Manthan_Parekh_Resume/");
+      const downloadUrl = resumeUrl.replace("/upload/", "/upload/fl_attachment:Manthan_Parekh_Resume.pdf/");
       window.open(downloadUrl, "_blank");
       return;
     }
