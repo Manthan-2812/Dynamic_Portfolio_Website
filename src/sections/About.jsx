@@ -19,13 +19,27 @@ function About() {
 
   async function handleDownload() {
     if (resumeUrl) {
-      const downloadUrl = resumeUrl.replace("/upload/", "/upload/fl_attachment:Manthan_Parekh_Resume.pdf/");
-      window.open(downloadUrl, "_blank");
+      try {
+        const response = await fetch(resumeUrl, { method: "GET", mode: "cors" });
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = blobUrl;
+        a.download = "Manthan_Parekh_Resume.pdf";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(blobUrl);
+      } catch (e) {
+        window.open(resumeUrl, "_blank");
+      }
       return;
     }
     const url = resumeFile;
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, { method: "GET", mode: "cors" });
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       const blob = await response.blob();
       const blobUrl = URL.createObjectURL(blob);
       const a = document.createElement("a");
