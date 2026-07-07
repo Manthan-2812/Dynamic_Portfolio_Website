@@ -2,8 +2,36 @@ import { motion } from "framer-motion";
 import { Typewriter } from "react-simple-typewriter";
 import profile from "../assets/images/Portfolio.jpg";
 import resumeFile from "../assets/resume/Manthan Parekh New Resume .pdf";
+import { useState, useEffect, useRef } from "react";
+import api from "../utils/api";
 
 function About() {
+  const isAdmin = !!localStorage.getItem("token");
+  const fileInputRef = useRef(null);
+  const [resumeUrl, setResumeUrl] = useState(null);
+  const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    api.get("/resume").then(res => {
+      if (res.data && res.data.url) setResumeUrl(res.data.url);
+    }).catch(() => {});
+  }, []);
+
+  async function handleResumeUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+    try {
+      const res = await api.post("/resume", formData, { headers: { "Content-Type": "multipart/form-data" } });
+      setResumeUrl(res.data.url);
+    } catch (err) {
+      alert("Failed to upload resume");
+    }
+    setUploading(false);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }
   return (
     <section
       id="about"
@@ -86,7 +114,7 @@ function About() {
             />
             
             <motion.a
-              href={resumeFile}
+              href={resumeUrl || resumeFile}
               download="Manthan Parekh New Resume .pdf"
               className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold rounded-full shadow-lg hover:shadow-purple-500/50 hover:scale-105 transition-all duration-300 border border-purple-400/30"
               whileHover={{ scale: 1.05 }}
@@ -94,6 +122,25 @@ function About() {
             >
               Download Resume
             </motion.a>
+
+            {isAdmin && (
+              <div className="flex flex-col items-center gap-2">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="application/pdf"
+                  onChange={handleResumeUpload}
+                  style={{ display: "none" }}
+                />
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading}
+                  className="px-4 py-2 text-sm bg-white/10 border border-purple-500/40 text-purple-300 rounded-full hover:bg-purple-500/20 transition-colors disabled:opacity-50"
+                >
+                  {uploading ? "Uploading..." : "Update Resume"}
+                </button>
+              </div>
+            )}
           </div>
 
         </motion.div>
