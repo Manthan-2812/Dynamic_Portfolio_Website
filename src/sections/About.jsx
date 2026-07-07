@@ -115,7 +115,9 @@ function About() {
             
             <motion.a
               href={resumeUrl || resumeFile}
-              download="Manthan Parekh New Resume .pdf"
+              download="Manthan_Parekh_Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
               className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold rounded-full shadow-lg hover:shadow-purple-500/50 hover:scale-105 transition-all duration-300 border border-purple-400/30"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
