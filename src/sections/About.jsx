@@ -17,6 +17,29 @@ function About() {
     }).catch(() => {});
   }, []);
 
+  async function handleDownload() {
+    if (resumeUrl) {
+      const downloadUrl = resumeUrl.replace("/upload/", "/upload/fl_attachment:Manthan_Parekh_Resume/");
+      window.open(downloadUrl, "_blank");
+      return;
+    }
+    const url = resumeFile;
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = "Manthan_Parekh_Resume.pdf";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(blobUrl);
+    } catch {
+      window.open(url, "_blank");
+    }
+  }
+
   async function handleResumeUpload(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -113,8 +136,8 @@ function About() {
               transition={{ duration: 4, repeat: Infinity }}
             />
             
-            <motion.a
-              href={resumeUrl || resumeFile}
+            <motion.button
+              onClick={handleDownload}
               download="Manthan_Parekh_Resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
@@ -123,7 +146,7 @@ function About() {
               whileTap={{ scale: 0.95 }}
             >
               Download Resume
-            </motion.a>
+            </motion.button>
 
             {isAdmin && (
               <div className="flex flex-col items-center gap-2">
